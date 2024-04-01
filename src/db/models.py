@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
 
-from db.database import Base
+Base = declarative_base()
 
 class Deck(Base):
   __tablename__ = 'decks'

@@ -1,7 +1,6 @@
-from  db.models import Card, Deck
-from db.database import session
-from bot.main import init as bot_init
+from bot.main import init_bot
+from db.init_schema import init_schema
 
 if __name__ == '__main__':
-  bot_init()
-
+  init_schema()
+  init_bot()

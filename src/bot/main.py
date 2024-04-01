@@ -5,7 +5,7 @@ from bot.import_command import import_command
 from bot.list_command import list_command
 from bot.rename_command import rename_command
 
-def init():
+def init_bot():
   print('Starting...')
 
   if not config.TOKEN:

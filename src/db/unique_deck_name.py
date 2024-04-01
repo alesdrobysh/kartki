@@ -1,5 +1,5 @@
 from db.models import Deck
-from db.database import session
+from db.session import session
 
 def unique_deck_name(name: str, counter: int = 0) -> str:
     check_deck = session.query(Deck).filter(Deck.name == name).first()

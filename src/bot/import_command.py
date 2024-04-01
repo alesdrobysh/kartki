@@ -4,7 +4,7 @@ import requests
 from telegram import Update
 
 from db.models import Deck, Card
-from db.database import session
+from db.session import session
 from db.unique_deck_name import unique_deck_name
 
 async def import_command(update: Update, _):

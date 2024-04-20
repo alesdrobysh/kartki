@@ -3,9 +3,8 @@ import csv
 import requests
 from telegram import Update
 
-from db.models import Deck, Card
-from db.session import session
-from db.unique_deck_name import unique_deck_name
+from db.cards_dynamodb_repository import CardsDynamoDbRepository
+from model.card import Card
 
 async def import_command(update: Update, _):
   '''Usage: /import <link> <name> - Import a Google Sheet into the database'''
@@ -51,12 +50,6 @@ def get_sheet(link):
     return list(reader)
 
 def update_db(rows: list[list[str]], name: str):
-    deck = Deck(name=unique_deck_name(name))
-    session.add(deck)
-    session.flush()
-
-    for row in rows:
-      card = Card(question=row[0], answer=row[1], deck_id=deck.id)
-      session.add(card)
-
-    session.commit()
+    CardsDynamoDbRepository().insert_cards([
+        Card(deck_name=name, question=row[0], answer=row[1]) for row in rows
+    ])

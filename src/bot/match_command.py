@@ -1,9 +1,10 @@
 import random
+from typing import List
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, Application, CallbackQueryHandler, CommandHandler
 
-from db.models import Card, Deck
-from db.session import session
+from db.cards_dynamodb_repository import CardsDynamoDbRepository
+from model.card import Card
 
 async def match_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   '''
@@ -21,13 +22,15 @@ async def match_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Usage: /match <deck_name>')
     return
   
+  repository = CardsDynamoDbRepository()
+  
   deck_name = context.args[0]
-  deck = session.query(Deck).filter(Deck.name == deck_name).first()
-  if not deck:
+  # deck = session.query(Deck).filter(Deck.name == deck_name).first()
+  if not repository.has_deck(deck_name):
     await update.message.reply_text('Deck not found!')
     return
   
-  cards = session.query(Card).filter(Card.deck_id == deck.id).all()
+  cards = repository.list_cards_in_deck(deck_name)
   if not cards:
     await update.message.reply_text('Deck is empty!')
     return
@@ -36,7 +39,7 @@ async def match_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   await match_game.start()
   
 class MatchGame:
-  def __init__(self, application: Application, chat_id: int, cards: list[Card]):
+  def __init__(self, application: Application, chat_id: int, cards: List[Card]):
     self.cards = cards
     self.application = application
     self.current_card_index = 0

@@ -1,8 +1,6 @@
 from telegram import Update
 
-from db.models import Deck, Card
-from db.session import session
-from db.unique_deck_name import unique_deck_name
+from db.cards_dynamodb_repository import CardsDynamoDbRepository
 
 async def list_command(update: Update, _):
   '''
@@ -27,22 +25,23 @@ async def list_command(update: Update, _):
     await update.message.reply_text(list_deck(commands[1]))
 
 def list_all_decks():
-  decks = session.query(Deck).all()
+  repository = CardsDynamoDbRepository()
+  decks = repository.list_decks()
 
   if not decks:
     return 'No decks found!'
 
-  decks_list = '\n'.join([str(deck.name) for deck in decks])
+  decks_list = '\n'.join(decks)
 
   return decks_list
 
 def list_deck(name: str):
-  deck = session.query(Deck).filter(Deck.name == name).first()
+  repository = CardsDynamoDbRepository()
 
-  if not deck:
+  if not repository.has_deck(name):
     return 'Deck not found!'
 
-  cards = session.query(Card).filter(Card.deck_id == deck.id).all()
+  cards = repository.list_cards_in_deck(name)
 
   if not cards:
     return 'No cards found!'

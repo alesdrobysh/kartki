@@ -6,29 +6,7 @@ services:
     tty: true
     environment:
       - TOKEN=${TOKEN}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-    depends_on:
-      db:
-        condition: service_healthy
-  db:
-    image: postgres
-    restart: always
-    user: ${DB_USER}
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_PASSWORD=${DB_PASS}
-    expose:
-      - ${DB_PORT}
-    healthcheck:
-      test: [ "CMD", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-volumes:
-  db-data:
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - CARDS_TABLE_NAME=${CARDS_TABLE_NAME}

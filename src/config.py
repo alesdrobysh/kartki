@@ -6,15 +6,10 @@ load_dotenv()
 class Config:
   TOKEN = os.getenv('TOKEN')
 
-  DB_HOST = os.getenv('DB_HOST')
-  DB_PORT = os.getenv('DB_PORT')
-  DB_USER = os.getenv('DB_USER')
-  DB_PASS = os.getenv('DB_PASS')
-  DB_NAME = os.getenv('DB_NAME')
+  AWS_REGION = os.getenv('AWS_REGION')
+  AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+  AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
-  @property
-  def db_url_psycopg(self):
-    return f'postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
-
+  CARDS_TABLE_NAME = os.getenv('CARDS_TABLE_NAME')
 
 config = Config()
